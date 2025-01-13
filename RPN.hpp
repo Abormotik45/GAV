@@ -4,4 +4,4 @@
 
 std::vector<Token> dijkstra(std::vector<Token> tokens);
 
-long double count(std::vector<Token> rpn);
+void count(std::vector<Token> rpn);
