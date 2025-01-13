@@ -19,7 +19,13 @@ int main() {
         tokenize(cur, tokens);
 
         auto rpn = dijkstra(tokens);
-        count(tokens);
+
+        for (auto& i: rpn) {
+            std::cout << i.get_str();
+        }
+
+        //count(rpn);
+        std::cout << "\n";
     }
     return 0;
 }
