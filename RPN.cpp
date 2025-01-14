@@ -14,8 +14,12 @@ std::vector<Token> dijkstra(std::vector<Token> tokens) {
         case Token::FLOAT_NUMBER:
             rpn.push_back(token);
             break;
+        
+        case Token::VAR_COMM:
+            rpn.push_back(token);
+            break;
 
-        case Token::FUNCTION: //(or variables) 
+        case Token::FUNCTION:
             stack.push(token);
             break;
 

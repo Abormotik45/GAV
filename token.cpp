@@ -1,38 +1,49 @@
 #include "token.hpp"
 #include <map>
-
+#include <set>
 
 Token::Token(std::string str, Type type, Associativity asc) : _type{type}, _str{str} {
     _asc = asc;
 }
 
 int Token::get_priority() {
-    std::map<std::string,int> l_asc;
-    l_asc["*"] = 3;
-    l_asc["//"] = 3;
-    l_asc["/"] = 3;
-    l_asc["%"] = 3;
-    l_asc["+"] = 2;
-    l_asc["-"] = 2;
+    std::map<std::string,int> l_asc {
+        {"++", 2},
+        {"--", 2},
+        {"*", 4},
+        {"/", 4},
+        {"//", 4},
+        {"%", 4},
+        {"+", 5},
+        {"-", 5},
+        {"<<", 6},
+        {">>", 6},
+        {"<", 7},
+        {"<=", 7},
+        {">", 7},
+        {">=", 7},
+        {"==", 8},
+        {"!=", 8},
+        {"&&", 9},
+        {"||", 10}
+    };
 
-    l_asc["=="] = 1;
-    l_asc[">"] = 1;
-    l_asc[">="] = 1;
-    l_asc["<"] = 1;
-    l_asc["<="] = 1;
+    std::map<std::string,int> r_asc {
+        {"!", 2},
+        {"++", 3},
+        {"--", 3},
+        {"^", 3},
 
-    l_asc["="] = 0;
-    l_asc["*="] = 0;
-    l_asc["//="] = 0;
-    l_asc["%="] = 0;
-    l_asc["/="] = 0;
-    l_asc["-="] = 0;
-    l_asc["+="] = 0;
-
-
-    std::map<std::string,int> r_asc;
-    r_asc["^"] = 5;
-    r_asc["-"] = 4;
+        {"=", 12},
+        {"*=", 12},
+        {"/=", 12},
+        {"//=", 12},
+        {"+=", 12},
+        {"-=", 12},
+        {"^=", 12},
+        {"<<=", 12},
+        {">>=", 12}
+    };
 
 
     switch (_asc) {
@@ -42,5 +53,43 @@ int Token::get_priority() {
     case(RIGHT): 
         if (r_asc.contains(_str)) return r_asc[_str];
         break;
+    default:
+        break;
     }
+}
+
+Token::Associativity get_asc(std::string s) {
+    std::map<std::string, Token::Associativity> map {
+        {"*", Token::LEFT},
+        {"/", Token::LEFT},
+        {"//", Token::LEFT},
+        {"%", Token::LEFT},
+        {"+", Token::LEFT},
+        {"-", Token::LEFT},
+        {"<<", Token::LEFT},
+        {">>", Token::LEFT},
+        {"<", Token::LEFT},
+        {"<=", Token::LEFT},
+        {">", Token::LEFT},
+        {">=", Token::LEFT},
+        {"==", Token::LEFT},
+        {"!=", Token::LEFT},
+        {"&&", Token::LEFT},
+        {"||", Token::LEFT},
+
+        {"!", Token::RIGHT},
+        {"++", Token::RIGHT},
+        {"--", Token::RIGHT},
+        {"^", Token::RIGHT},
+        {"=", Token::RIGHT},
+        {"*=", Token::RIGHT},
+        {"/=", Token::RIGHT},
+        {"//=", Token::RIGHT},
+        {"+=", Token::RIGHT},
+        {"-=", Token::RIGHT},
+        {"^=", Token::RIGHT},
+        {"<<=", Token::RIGHT},
+        {">>=", Token::RIGHT}
+    };
+    return map[s];
 }

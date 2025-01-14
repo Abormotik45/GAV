@@ -7,10 +7,12 @@ public:
         OPERATOR,
         INT_NUMBER,
         FLOAT_NUMBER,
-        FUNCTION, // or VARIABLE
+        FUNCTION,
+        VAR_COMM,
         SEPARATOR,
         L_PARENTHESIS,
-        R_PARENTHESIS
+        R_PARENTHESIS,
+        DEFAULT
     };
  
     enum Associativity {
@@ -23,6 +25,7 @@ public:
     std::string& get_str() {return _str;}
     Type& get_type() {return _type;}
     Associativity& get_asc() {return _asc;}
+    void set_type(Type new_type) {_type = new_type;}
     int get_priority();
 
 private:
@@ -30,3 +33,5 @@ private:
     Type _type;
     Associativity _asc;
 };
+
+Token::Associativity get_asc(std::string s);

@@ -21,11 +21,18 @@ int main() {
         auto rpn = dijkstra(tokens);
 
         for (auto& i: rpn) {
-            std::cout << i.get_str();
-        }
+            std::cout << i.get_str() << "\t\t";
 
-        //count(rpn);
-        std::cout << "\n";
+            std::string type;
+            if (i.get_type() == Token::VAR_COMM) 
+                std::cout << "VARIABLE\n";
+            else if (i.get_type() == Token::FUNCTION)
+                std::cout << "FUNCTION\n";
+            else if (i.get_type() == Token::OPERATOR)
+                std::cout << "OPERATOR\n";
+            else if (i.get_type() == Token::INT_NUMBER)
+                std::cout << "INT_NUMBER\n";
+        }
     }
     return 0;
 }
