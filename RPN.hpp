@@ -2,6 +2,6 @@
 #include "token.hpp"
 #include <vector>
 
-std::vector<Token> dijkstra(std::vector<Token> tokens);
+std::vector<Token> dijkstra(std::vector<Token>& tokens);
 
-void count(std::vector<Token> rpn);
+void calc(std::vector<Token>& rpn);

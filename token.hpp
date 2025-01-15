@@ -12,6 +12,7 @@ public:
         SEPARATOR,
         L_PARENTHESIS,
         R_PARENTHESIS,
+        FUNC_SIZE,
         DEFAULT
     };
  

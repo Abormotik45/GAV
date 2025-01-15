@@ -145,7 +145,13 @@ void tokenize (std::string& cur, std::vector<Token>& tokens) {
                             tokens.push_back(Token(buffer, Token::OPERATOR, Token::LEFT));
                     }
                     else {
-                        tokens.push_back(Token(buffer, Token::OPERATOR, get_asc(buffer)));
+                        if (buffer == "-") {
+                            if(tokens.size() == 0 || tokens.back().get_type() == Token::L_PARENTHESIS)
+                                tokens.emplace_back(buffer, Token::OPERATOR, Token::RIGHT);
+                            else
+                                tokens.emplace_back(buffer, Token::OPERATOR, Token::LEFT);
+                        }
+                        else tokens.push_back(Token(buffer, Token::OPERATOR, get_asc(buffer)));
                     }
                 }
                 // else Error!!!
@@ -160,14 +166,17 @@ void tokenize (std::string& cur, std::vector<Token>& tokens) {
 
             if (is_num) { 
                 state = INT;
+                buffer_type = Token::INT_NUMBER;
                 buffer.push_back(s);
             }
             else if (is_letter) { 
                 state = TEXT;
+                buffer_type = Token::VAR_COMM;
                 buffer.push_back(s);
             }
             else if (is_op) { 
                 state = OP;
+                buffer_type = Token::OPERATOR;
                 buffer.push_back(s);
             }
 
