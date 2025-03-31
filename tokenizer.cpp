@@ -2,30 +2,36 @@
 #include <set>
 #include <cctype>
 
-void tokenize (std::string& cur, std::vector<Token>& tokens) {
+bool isalpha_rus(char c) {
+    return c >= L'а' && c <= L'я' || c >= L'А' && c <= L'Я'
+        || c == L'ё' || c == L'Ё'; 
+}
+
+
+void tokenize (std::wstring& cur, std::vector<Token>& tokens) {
     State state = START;
     
-    std::string valid_op_chars = "+-=^*/%<>!&|";
-    std::set<std::string> valid_ops {
-        "++", "--",
-        "+", "-",
-        "+=", "-=",
-        "^", "*", "/", "//", "%",
-        "^=", "*=", "/=", "//=", "%=",
-        "<<", ">>", "<<=", ">>=",
-        "<", "<=", ">", ">+", "==", "!=",
-        "&&", "||", "=", "!"
+    std::wstring valid_op_chars = L"+-=^*/%<>!&|";
+    std::set<std::wstring> valid_ops {
+        L"++", L"--",
+        L"+", L"-",
+        L"+=", L"-=",
+        L"^", L"*", L"/", L"//", L"%",
+        L"^=", L"*=", L"/=", L"//=", L"%=",
+        L"<<", L">>", L"<<=", L">>=",
+        L"<", L"<=", L">", L">+", L"==", L"!=",
+        L"&&", L"||", L"=", L"!"
     };
 
-    std::string buffer;
+    std::wstring buffer;
     Token::Type buffer_type = Token::DEFAULT;
 
     bool is_num, is_letter, is_op, is_point, is_sep, is_par, is_Lpar, is_Rpar;
     
     for (auto s: cur) {
         // тип символа
-        is_num = std::isdigit(s);
-        is_letter = std::isalpha(s);
+        is_num = std::iswdigit(s);
+        is_letter = std::iswalpha(s) || isalpha_rus(s);
         is_op = (valid_op_chars.find(s) != valid_op_chars.npos);
         is_point = (s == '.');
         is_sep = (s == ',');
@@ -119,10 +125,10 @@ void tokenize (std::string& cur, std::vector<Token>& tokens) {
                     tokens.pop_back();
                     tokens.push_back(del_token);
                 }
-                tokens.emplace_back(std::string{s}, (is_Rpar ? Token::R_PARENTHESIS : Token::L_PARENTHESIS));
+                tokens.emplace_back(std::wstring{s}, (is_Rpar ? Token::R_PARENTHESIS : Token::L_PARENTHESIS));
             }
             else if (is_sep) {
-                tokens.emplace_back(std::string{s}, Token::SEPARATOR);
+                tokens.emplace_back(std::wstring{s}, Token::SEPARATOR);
             }
         };
 
@@ -137,7 +143,7 @@ void tokenize (std::string& cur, std::vector<Token>& tokens) {
         case (BUFFER):
             if (buffer_type == Token::OPERATOR) {
                 if (valid_ops.find(buffer) != valid_ops.end()) {
-                    if (buffer == "++" || buffer == "--") {
+                    if (buffer == L"++" || buffer == L"--") {
                         if (!tokens.empty() && (tokens.back().get_type() == Token::INT_NUMBER ||
                         tokens.back().get_type() == Token::VAR_COMM)) 
                             tokens.push_back(Token(buffer, Token::OPERATOR, Token::RIGHT));
@@ -145,7 +151,7 @@ void tokenize (std::string& cur, std::vector<Token>& tokens) {
                             tokens.push_back(Token(buffer, Token::OPERATOR, Token::LEFT));
                     }
                     else {
-                        if (buffer == "-") {
+                        if (buffer == L"-") {
                             if(tokens.size() == 0 || tokens.back().get_type() == Token::L_PARENTHESIS)
                                 tokens.emplace_back(buffer, Token::OPERATOR, Token::RIGHT);
                             else
@@ -186,7 +192,7 @@ void tokenize (std::string& cur, std::vector<Token>& tokens) {
     if (!buffer.empty()) {
         if (buffer_type == Token::OPERATOR) {
             if (valid_ops.find(buffer) != valid_ops.end()) {
-                if (buffer == "++" || buffer == "--") {
+                if (buffer == L"++" || buffer == L"--") {
                     if (!tokens.empty() && (tokens.back().get_type() == Token::INT_NUMBER ||
                     tokens.back().get_type() == Token::VAR_COMM)) 
                         tokens.push_back(Token(buffer, Token::OPERATOR, Token::RIGHT));

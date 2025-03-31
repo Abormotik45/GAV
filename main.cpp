@@ -1,21 +1,21 @@
 #include <iostream>
-#include "variables.hpp"
-#include "token.hpp"
-#include "tokenizer.hpp"
-#include "RPN.hpp"
+#include "token.cpp"
+#include "tokenizer.cpp"
+#include "RPN.cpp"
 
 
 int main() {
+    setlocale(0, "");
     std::string filename;
     std::cin >> filename;
     freopen(filename.c_str(), "r", stdin);
     
     int cnt = 0;
-    while (!std::cin.eof()) {
+    while (!std::wcin.eof()) {
         cnt++;
-        std::string cur;
-        getline(std::cin, cur);
-        if (cur == "")
+        std::wstring cur;
+        getline(std::wcin, cur);
+        if (cur.empty())
             continue;
 
         std::vector<Token> tokens;

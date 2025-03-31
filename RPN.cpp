@@ -1,9 +1,11 @@
 #include "RPN.hpp"
 #include "token.hpp"
-#include "functions.hpp"
+
 #include <stack>
 #include <tuple>
 #include <cmath>
+#include <iostream>
+#include <variant>
 
 std::vector<Token> dijkstra(std::vector<Token>& tokens) {
     std::vector<Token> rpn;
@@ -50,19 +52,21 @@ std::vector<Token> dijkstra(std::vector<Token>& tokens) {
 
         case Token::R_PARENTHESIS:
         {
-            int token_count = 0;
+            // int token_count = 0;
             while (stack.top().get_type() != Token::L_PARENTHESIS) {
-                token_count++;
+                // token_count++;
                 stack_top_to_rpn();
             }
 
             stack.pop();
 
+            /*
             if (!stack.empty() && stack.top().get_type() == Token::FUNCTION) {
-                std::string sz_str = std::to_string(token_count);
+                std::wstring sz_str = std::to_wstring(token_count);
                 rpn.push_back(Token(sz_str, Token::FUNC_SIZE));
                 stack_top_to_rpn();
             }
+            */
             break;
         }
         default:
@@ -79,8 +83,14 @@ std::vector<Token> dijkstra(std::vector<Token>& tokens) {
 
 
 void calc(std::vector<Token>& rpn) {
-    std::stack<long double> stack;
+    std::stack<std::variant<long double,std::wstring>> stack;
     auto get_one = [&]() {
+        auto x = stack.top();
+        stack.pop();
+        return std::get<long double>(x);
+    };
+
+    auto get_one_variant = [&]() {
         auto x = stack.top();
         stack.pop();
         return x;
@@ -98,29 +108,34 @@ void calc(std::vector<Token>& rpn) {
         case Token::FLOAT_NUMBER:
             stack.push(stold(token.get_str()));
             break;
+        
+        case Token::VAR_COMM:
+            stack.push(token.get_str());
+            break;
+
         case Token::OPERATOR: 
         {
             long double res = 0;
             auto& s = token.get_str();
             switch (token.get_asc()) {
             case Token::LEFT:
-                if (s == "+") {
+                if (s == L"+") {
                     auto [y, x] = get_two();
                     res = x + y;
                 }
-                else if (s == "-") {
+                else if (s == L"-") {
                     auto [y, x] = get_two();
                     res = x - y;
                 }
-                else if (s == "*") {
+                else if (s == L"*") {
                     auto [y, x] = get_two();
                     res = x * y;
                 }
-                else if (s == "/") {
+                else if (s == L"/") {
                     auto [y, x] = get_two();
                     res = x / y;
                 }
-                else if (s == "//") {
+                else if (s == L"//") {
                     auto [y, x] = get_two();
                     res = std::floor(x / y);
                 }
@@ -132,11 +147,11 @@ void calc(std::vector<Token>& rpn) {
                 break;
 
             case Token::RIGHT:
-                if (s == "^") {
-                    auto [y, x] = get_two();
-                    res = std::pow(x, y);
-                }
-                else if (s == "-") {
+                //if (s == "^") {
+                //    auto [y, x] = get_two();
+                //    res = std::pow(x, y);
+                //}
+                if (s == L"-") {
                     auto x = get_one();
                     res = -x;
                 }
@@ -147,9 +162,25 @@ void calc(std::vector<Token>& rpn) {
             stack.push(res);
             break;
         }
+        case Token::FUNCTION:
+        {
+            auto& s = token.get_str();
+            if (s == L"мяу") {
+                auto x = get_one_variant();
+                std::visit([](const auto& arg) {std::wcout << arg << "\n";}, x);
+            }
+            if (s == L"кушать") {
+                auto x = get_one_variant();
+                std::visit([](const auto& arg) {std::wcout << arg << "\n";}, x);
+            }
+            if (s == L"спать") {
+                auto x = get_one_variant();
+                std::visit([](const auto& arg) {std::wcout << arg << "\n";}, x);
+            }
+        }
         default:
             break;
         }
     }
-    std::cout << stack.top() << "\n";
+    // std::wcout << stack.top() << "\n"; // delete
 }

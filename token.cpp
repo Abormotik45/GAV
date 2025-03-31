@@ -2,48 +2,48 @@
 #include <map>
 #include <set>
 
-Token::Token(std::string str, Type type, Associativity asc) : _type{type}, _str{str} {
+Token::Token(std::wstring str, Type type, Associativity asc) : _type{type}, _str{str} {
     _asc = asc;
 }
 
 int Token::get_priority() {
-    std::map<std::string,int> l_asc {
-        {"++", 2},
-        {"--", 2},
-        {"*", 4},
-        {"/", 4},
-        {"//", 4},
-        {"%", 4},
-        {"+", 5},
-        {"-", 5},
-        {"<<", 6},
-        {">>", 6},
-        {"<", 7},
-        {"<=", 7},
-        {">", 7},
-        {">=", 7},
-        {"==", 8},
-        {"!=", 8},
-        {"&&", 9},
-        {"||", 10}
+    std::map<std::wstring,int> l_asc {
+        {L"++", 2},
+        {L"--", 2},
+        {L"*", 4},
+        {L"/", 4},
+        {L"//", 4},
+        {L"%", 4},
+        {L"+", 5},
+        {L"-", 5},
+        {L"<<", 6},
+        {L">>", 6},
+        {L"<", 7},
+        {L"<=", 7},
+        {L">", 7},
+        {L">=", 7},
+        {L"==", 8},
+        {L"!=", 8},
+        {L"&&", 9},
+        {L"||", 10}
     };
 
-    std::map<std::string,int> r_asc {
-        {"!", 2},
-        {"++", 3},
-        {"--", 3},
-        {"^", 3},
-        {"-", 5},
+    std::map<std::wstring,int> r_asc {
+        {L"!", 2},
+        {L"++", 3},
+        {L"--", 3},
+        {L"^", 3},
+        {L"-", 5},
 
-        {"=", 12},
-        {"*=", 12},
-        {"/=", 12},
-        {"//=", 12},
-        {"+=", 12},
-        {"-=", 12},
-        {"^=", 12},
-        {"<<=", 12},
-        {">>=", 12}
+        {L"=", 12},
+        {L"*=", 12},
+        {L"/=", 12},
+        {L"//=", 12},
+        {L"+=", 12},
+        {L"-=", 12},
+        {L"^=", 12},
+        {L"<<=", 12},
+        {L">>=", 12}
     };
 
 
@@ -59,38 +59,38 @@ int Token::get_priority() {
     }
 }
 
-Token::Associativity get_asc(std::string s) {
-    std::map<std::string, Token::Associativity> map {
-        {"*", Token::LEFT},
-        {"/", Token::LEFT},
-        {"//", Token::LEFT},
-        {"%", Token::LEFT},
-        {"+", Token::LEFT},
-        {"-", Token::LEFT},
-        {"<<", Token::LEFT},
-        {">>", Token::LEFT},
-        {"<", Token::LEFT},
-        {"<=", Token::LEFT},
-        {">", Token::LEFT},
-        {">=", Token::LEFT},
-        {"==", Token::LEFT},
-        {"!=", Token::LEFT},
-        {"&&", Token::LEFT},
-        {"||", Token::LEFT},
+Token::Associativity get_asc(std::wstring s) {
+    std::map<std::wstring, Token::Associativity> map {
+        {L"*", Token::LEFT},
+        {L"/", Token::LEFT},
+        {L"//", Token::LEFT},
+        {L"%", Token::LEFT},
+        {L"+", Token::LEFT},
+        {L"-", Token::LEFT},
+        {L"<<", Token::LEFT},
+        {L">>", Token::LEFT},
+        {L"<", Token::LEFT},
+        {L"<=", Token::LEFT},
+        {L">", Token::LEFT},
+        {L">=", Token::LEFT},
+        {L"==", Token::LEFT},
+        {L"!=", Token::LEFT},
+        {L"&&", Token::LEFT},
+        {L"||", Token::LEFT},
 
-        {"!", Token::RIGHT},
-        {"++", Token::RIGHT},
-        {"--", Token::RIGHT},
-        {"^", Token::RIGHT},
-        {"=", Token::RIGHT},
-        {"*=", Token::RIGHT},
-        {"/=", Token::RIGHT},
-        {"//=", Token::RIGHT},
-        {"+=", Token::RIGHT},
-        {"-=", Token::RIGHT},
-        {"^=", Token::RIGHT},
-        {"<<=", Token::RIGHT},
-        {">>=", Token::RIGHT}
+        {L"!", Token::RIGHT},
+        {L"++", Token::RIGHT},
+        {L"--", Token::RIGHT},
+        {L"^", Token::RIGHT},
+        {L"=", Token::RIGHT},
+        {L"*=", Token::RIGHT},
+        {L"/=", Token::RIGHT},
+        {L"//=", Token::RIGHT},
+        {L"+=", Token::RIGHT},
+        {L"-=", Token::RIGHT},
+        {L"^=", Token::RIGHT},
+        {L"<<=", Token::RIGHT},
+        {L">>=", Token::RIGHT}
     };
     return map[s];
 }

@@ -21,18 +21,18 @@ public:
         LEFT,
         RIGHT
     };
-    Token(std::string str, Type type, Associativity asc = NONE);
+    Token(std::wstring str, Type type, Associativity asc = NONE);
 
-    std::string& get_str() {return _str;}
+    std::wstring& get_str() {return _str;}
     Type& get_type() {return _type;}
     Associativity& get_asc() {return _asc;}
     void set_type(Type new_type) {_type = new_type;}
     int get_priority();
 
 private:
-    std::string _str;
+    std::wstring _str;
     Type _type;
     Associativity _asc;
 };
 
-Token::Associativity get_asc(std::string s);
+Token::Associativity get_asc(std::wstring s);
