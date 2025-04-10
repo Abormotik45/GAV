@@ -1,11 +1,15 @@
-#include "RPN.hpp"
+#pragma once
 #include "token.hpp"
-
+#include <vector>
 #include <stack>
 #include <tuple>
 #include <cmath>
 #include <iostream>
 #include <variant>
+#include "eating.cpp"
+#include "sleeping.cpp"
+#include "walk.cpp"
+#include "hunt.cpp"
 
 std::vector<Token> dijkstra(std::vector<Token>& tokens) {
     std::vector<Token> rpn;
@@ -108,10 +112,6 @@ void calc(std::vector<Token>& rpn) {
         case Token::FLOAT_NUMBER:
             stack.push(stold(token.get_str()));
             break;
-        
-        case Token::VAR_COMM:
-            stack.push(token.get_str());
-            break;
 
         case Token::OPERATOR: 
         {
@@ -163,24 +163,37 @@ void calc(std::vector<Token>& rpn) {
             break;
         }
         case Token::FUNCTION:
+        case Token::VAR_COMM:
         {
             auto& s = token.get_str();
+            //std::wcout << s << "\n" << endl;
+            
             if (s == L"мяу") {
-                auto x = get_one_variant();
-                std::visit([](const auto& arg) {std::wcout << arg << "\n";}, x);
+                clearScreen();
+                system("aplay data/meow.wav -q &");
+                std::this_thread::sleep_for(std::chrono::milliseconds(2000));
             }
-            if (s == L"кушать") {
-                auto x = get_one_variant();
-                std::visit([](const auto& arg) {std::wcout << arg << "\n";}, x);
+            else if (s == L"ам") {
+                system("aplay data/eating.wav -q &");
+                eating();
             }
-            if (s == L"спать") {
-                auto x = get_one_variant();
-                std::visit([](const auto& arg) {std::wcout << arg << "\n";}, x);
+            else if (s == L"спать") {
+                system("aplay data/hrap.wav -q &");
+                sleeping();
             }
+            else if (s == L"гулять") {
+                system("aplay data/walk.wav -q &");
+                walk();
+            }
+            
+            else if (s == L"охота") {
+                hunt();
+            }
+            break;
+
         }
         default:
             break;
         }
     }
-    // std::wcout << stack.top() << "\n"; // delete
 }
